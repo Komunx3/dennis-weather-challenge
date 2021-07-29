@@ -9,34 +9,53 @@ import de.exxcellent.challenge.reader.CSVReader;
 public class ModuleManager {
 
 
-    public String executeModule_Weather() {
-        CSVReader csvReader = new CSVReader("de/exxcellent/challenge/weather.csv");
-        try {
-            List<HashMap<String, String>> data = csvReader.getData();
+    private HashMap<String, String> getSmallestDifference(CSVReader csvReader, String column1, String column2)
+            throws FileNotFoundException, IllegalFormatException {
 
-            int smallestDistance = -1;
-            HashMap<String, String> smallestDistanceEntry = null;
+        List<HashMap<String, String>> data = csvReader.getData();
 
-            for (HashMap<String, String> rowData : data) {
-                int distance = Integer.parseInt(rowData.get("MxT")) - Integer.parseInt(rowData.get("MnT"));
+        int smallestDistance = -1;
+        HashMap<String, String> smallestDistanceEntry = null;
 
-                if (smallestDistance == -1) {
-                    smallestDistance = distance;
-                    smallestDistanceEntry = rowData;
-                    continue;
-                }
+        for (HashMap<String, String> rowData : data) {
 
-                if (distance < smallestDistance) {
-                    smallestDistance = distance;
-                    smallestDistanceEntry = rowData;
-                }
+            int value1 = Integer.parseInt(rowData.get(column1));
+            int value2 = Integer.parseInt(rowData.get(column2));
+            int distance = Math.abs(value1 - value2);
+
+            if (smallestDistance == -1) {
+                smallestDistance = distance;
+                smallestDistanceEntry = rowData;
+                continue;
             }
 
-            return String.format("Day with smallest temperature spread: %s",
-                    smallestDistanceEntry.get("Day"));
-        } catch (FileNotFoundException | IllegalFormatException e) {
-            e.printStackTrace();
-            return e.getMessage();
+            if (distance < smallestDistance) {
+                smallestDistance = distance;
+                smallestDistanceEntry = rowData;
+            }
         }
+
+        return smallestDistanceEntry;
+    }
+
+    public String executeModule_Football() throws FileNotFoundException, IllegalFormatException {
+        CSVReader csvReader = new CSVReader("de/exxcellent/challenge/football.csv", ",");
+
+        HashMap<String, String> entry = getSmallestDifference(
+                csvReader,
+                "Goals",
+                "Goals Allowed");
+
+        return "Team with smallest distance: " + entry.get("Team");
+    }
+
+    public String executeModule_Weather() throws FileNotFoundException, IllegalFormatException {
+        CSVReader csvReader = new CSVReader("de/exxcellent/challenge/weather.csv", ",");
+
+        HashMap<String, String> entry = getSmallestDifference(
+                csvReader,
+                "MxT",
+                "MnT");
+        return "Day of smallest temperature spread: " + entry.get("Day");
     }
 }

@@ -15,20 +15,20 @@ public class CSVReaderTest {
 
     @Test
     void getData_Test() throws FileNotFoundException, IllegalFormatException {
-        CSVReader csvReader = new CSVReader(fileName_CorrectData);
+        CSVReader csvReader = new CSVReader(fileName_CorrectData,",");
         List<HashMap<String,String>> data = csvReader.getData();
         assertEquals(7, data.size());
     }
 
     @Test
     void getData_Exception_FileNotFound_Test()  {
-        CSVReader csvReader = new CSVReader(fileName_CorrectData + "incorrect Path");
+        CSVReader csvReader = new CSVReader(fileName_CorrectData + "incorrect Path", ",");
         assertThrows(FileNotFoundException.class, () -> csvReader.getData());
     }
 
     @Test
     void getData_Exception_IllegalFormat_Test()  {
-        CSVReader csvReader = new CSVReader(fileName_IncorrectData);
+        CSVReader csvReader = new CSVReader(fileName_IncorrectData, ",");
         assertThrows(IllegalFormatException.class, () -> csvReader.getData());
     }
 

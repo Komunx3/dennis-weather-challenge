@@ -17,12 +17,14 @@ import de.exxcellent.challenge.exceptions.IllegalFormatException;
 public class CSVReader {
 
     private String relativeFilePath;
+    private String valueSeparator;
 
     /**
      * @param relativeFilePath an relative path to the file (package path included)
      */
-    public CSVReader(String relativeFilePath) {
+    public CSVReader(String relativeFilePath, String valueSeparator) {
         this.relativeFilePath = relativeFilePath;
+        this.valueSeparator = valueSeparator;
     }
 
     public List<HashMap<String, String>> getData() throws FileNotFoundException, IllegalFormatException {
@@ -32,17 +34,17 @@ public class CSVReader {
         List<String> lines = bufferedReader.lines().collect(Collectors.toList());
 
         /* Collecting headers and data of csv file */
-        List<String> columnHeadings = Arrays.asList(lines.get(0).split(","));
+        List<String> columnHeadings = Arrays.asList(lines.get(0).split(valueSeparator));
         List<String> rowLines = lines.subList(1, lines.size());
 
         /* Checking for incorrect format */
-        if (rowLines.stream().anyMatch(row -> row.split(",").length != columnHeadings.size()))
+        if (rowLines.stream().anyMatch(row -> row.split(valueSeparator).length != columnHeadings.size()))
             throw new IllegalFormatException("Illegal format of csv file");
 
         List<HashMap<String, String>> dataResult = new ArrayList<>();
         for (String rowLine : rowLines) {
             HashMap<String, String> mappedRow = new HashMap<>();
-            String[] valuesOfSingleRow = rowLine.split(",");
+            String[] valuesOfSingleRow = rowLine.split(valueSeparator);
 
             for (int i = 0; i < valuesOfSingleRow.length; i++) {
                 mappedRow.put(columnHeadings.get(i), valuesOfSingleRow[i]);

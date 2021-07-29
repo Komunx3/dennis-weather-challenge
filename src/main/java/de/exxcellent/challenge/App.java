@@ -1,11 +1,9 @@
 package de.exxcellent.challenge;
 
+
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.List;
 
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
-import de.exxcellent.challenge.reader.CSVReader;
 
 /**
  * The entry class for your solution. This class is only aimed as starting point and not intended as baseline for your software
@@ -22,6 +20,14 @@ public final class App {
     public static void main(String... args) {
 
         ModuleManager moduleManager = new ModuleManager();
-        System.out.println(moduleManager.executeModule_Weather());
+
+        try {
+            System.out.println(moduleManager.executeModule_Weather());
+            System.out.println(moduleManager.executeModule_Football());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalFormatException e) {
+            e.printStackTrace();
+        }
     }
 }
