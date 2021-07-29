@@ -2,14 +2,19 @@ package de.exxcellent.challenge.reader;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import de.exxcellent.challenge.exceptions.IllegalFormatException;
+
 
 public class CSVReader {
-
 
     private String relativeFilePath;
 
@@ -20,13 +25,35 @@ public class CSVReader {
         this.relativeFilePath = relativeFilePath;
     }
 
-    public List<HashMap<String, String>> getData() throws FileNotFoundException {
+    public List<HashMap<String, String>> getData() throws FileNotFoundException, IllegalFormatException {
         InputStream inputStream = getFileFromResourceAsStream(relativeFilePath);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        bufferedReader.lines().forEach(n -> System.out.println(n));
 
-        //TODO getData() is not fully implemented yet
-        return null;
+        List<String> lines = bufferedReader.lines().collect(Collectors.toList());
+
+        /* Collecting headers and data of csv file */
+        List<String> columnHeadings = Arrays.asList(lines.get(0).split(","));
+        List<String> rowLines = lines.subList(1, lines.size());
+
+        /* Checking for incorrect format */
+        if (rowLines.stream().anyMatch(row -> row.split(",").length != columnHeadings.size()))
+            throw new IllegalFormatException("Illegal format of csv file");
+
+        List<HashMap<String, String>> result = new ArrayList<>();
+
+        for (String rowLine : rowLines)
+        {
+            HashMap<String, String> hashMap = new HashMap<>();
+            String[] valuesOfSingleRow = rowLine.split(",");
+
+            for (int i = 0; i < valuesOfSingleRow.length; i++)
+            {
+                hashMap.put(columnHeadings.get(i), valuesOfSingleRow[i]);
+            }
+            result.add(hashMap);
+        }
+
+        return result;
     }
 
     private InputStream getFileFromResourceAsStream(String fileName) throws FileNotFoundException {

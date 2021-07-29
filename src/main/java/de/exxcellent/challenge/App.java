@@ -2,6 +2,7 @@ package de.exxcellent.challenge;
 
 import java.io.FileNotFoundException;
 
+import de.exxcellent.challenge.exceptions.IllegalFormatException;
 import de.exxcellent.challenge.reader.CSVReader;
 
 /**
@@ -21,7 +22,7 @@ public final class App {
         CSVReader csvReader = new CSVReader("de/exxcellent/challenge/football.csv");
         try {
             csvReader.getData();
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | IllegalFormatException e) {
             e.printStackTrace();
         }
 
