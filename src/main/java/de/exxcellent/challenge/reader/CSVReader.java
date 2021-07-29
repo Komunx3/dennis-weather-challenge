@@ -39,7 +39,7 @@ public class CSVReader {
         if (rowLines.stream().anyMatch(row -> row.split(",").length != columnHeadings.size()))
             throw new IllegalFormatException("Illegal format of csv file");
 
-        List<HashMap<String, String>> mappedRows = new ArrayList<>();
+        List<HashMap<String, String>> dataResult = new ArrayList<>();
         for (String rowLine : rowLines) {
             HashMap<String, String> mappedRow = new HashMap<>();
             String[] valuesOfSingleRow = rowLine.split(",");
@@ -47,9 +47,9 @@ public class CSVReader {
             for (int i = 0; i < valuesOfSingleRow.length; i++) {
                 mappedRow.put(columnHeadings.get(i), valuesOfSingleRow[i]);
             }
-            mappedRows.add(mappedRow);
+            dataResult.add(mappedRow);
         }
-        return mappedRows;
+        return dataResult;
     }
 
     private InputStream getFileFromResourceAsStream(String fileName) throws FileNotFoundException {

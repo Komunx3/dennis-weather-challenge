@@ -17,7 +17,7 @@ public class CSVReaderTest {
     void getData_Test() throws FileNotFoundException, IllegalFormatException {
         CSVReader csvReader = new CSVReader(fileName_CorrectData);
         List<HashMap<String,String>> data = csvReader.getData();
-        assertEquals(30, data.size());
+        assertEquals(7, data.size());
     }
 
     @Test
