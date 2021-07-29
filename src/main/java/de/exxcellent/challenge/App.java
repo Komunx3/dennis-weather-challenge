@@ -19,7 +19,7 @@ public final class App {
      */
     public static void main(String... args) {
 
-        CSVReader csvReader = new CSVReader("de/exxcellent/challenge/football.csv");
+        CSVReader csvReader = new CSVReader("de/exxcellent/challenge/weather.csv");
         try {
             csvReader.getData();
         } catch (FileNotFoundException | IllegalFormatException e) {
