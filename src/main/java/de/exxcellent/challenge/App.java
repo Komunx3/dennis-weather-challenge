@@ -1,5 +1,9 @@
 package de.exxcellent.challenge;
 
+import java.io.FileNotFoundException;
+
+import de.exxcellent.challenge.reader.CSVReader;
+
 /**
  * The entry class for your solution. This class is only aimed as starting point and not intended as baseline for your software
  * design. Read: create your own classes and packages as appropriate.
@@ -14,7 +18,13 @@ public final class App {
      */
     public static void main(String... args) {
 
-        // Your preparation code …
+        CSVReader csvReader = new CSVReader("de/exxcellent/challenge/football.csv");
+        try {
+            csvReader.getData();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
 
         String dayWithSmallestTempSpread = "Someday";     // Your day analysis function call …
         System.out.printf("Day with smallest temperature spread : %s%n", dayWithSmallestTempSpread);
