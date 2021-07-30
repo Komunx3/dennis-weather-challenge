@@ -5,7 +5,11 @@ import java.util.List;
 import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
 
-public class JsonReader implements Reader {
+public class JsonReader extends Reader {
+
+    protected JsonReader(String dataPath) {
+        super(dataPath);
+    }
 
     @Override
     public List<HashMap<String, String>> getData() throws IllegalFormatException, DataNotAvailableException {

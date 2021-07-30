@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,16 +15,15 @@ import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
 
 
-public class CSVReader implements Reader{
+public class CSVReader extends Reader{
 
-    private String relativeFilePath;
     private String valueSeparator;
 
     /**
      * @param relativeFilePath an relative path to the file (package path included)
      */
     public CSVReader(String relativeFilePath, String valueSeparator) {
-        this.relativeFilePath = relativeFilePath;
+        super(relativeFilePath);
         this.valueSeparator = valueSeparator;
     }
 
@@ -31,7 +31,7 @@ public class CSVReader implements Reader{
 
         InputStream inputStream = null;
         try {
-            inputStream = getFileFromResourceAsStream(relativeFilePath);
+            inputStream = getFileFromResourceAsStream(dataPath);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             throw new DataNotAvailableException("CSV File could not be found");

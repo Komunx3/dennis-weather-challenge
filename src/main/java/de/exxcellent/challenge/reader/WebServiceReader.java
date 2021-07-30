@@ -6,7 +6,11 @@ import java.util.List;
 import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
 
-public class WebServiceReader implements Reader {
+public class WebServiceReader extends Reader {
+
+    public WebServiceReader(String urlToWebService) {
+        super(urlToWebService);
+    }
 
     @Override
     public List<HashMap<String, String>> getData() throws IllegalFormatException, DataNotAvailableException {

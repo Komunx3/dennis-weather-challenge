@@ -3,6 +3,8 @@ package de.exxcellent.challenge;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
+
+import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
 import de.exxcellent.challenge.reader.CSVReader;
 
@@ -10,7 +12,7 @@ public class ModuleManager {
 
 
     private HashMap<String, String> getSmallestDifference(CSVReader csvReader, String column1, String column2)
-            throws FileNotFoundException, IllegalFormatException {
+            throws IllegalFormatException, DataNotAvailableException {
 
         List<HashMap<String, String>> data = csvReader.getData();
 
@@ -38,7 +40,7 @@ public class ModuleManager {
         return smallestDistanceEntry;
     }
 
-    public String executeModule_Football() throws FileNotFoundException, IllegalFormatException {
+    public String executeModule_Football() throws IllegalFormatException, DataNotAvailableException {
         CSVReader csvReader = new CSVReader("de/exxcellent/challenge/football.csv", ",");
 
         HashMap<String, String> entry = getSmallestDifference(
@@ -49,7 +51,7 @@ public class ModuleManager {
         return "Team with smallest distance: " + entry.get("Team");
     }
 
-    public String executeModule_Weather() throws FileNotFoundException, IllegalFormatException {
+    public String executeModule_Weather() throws IllegalFormatException, DataNotAvailableException {
         CSVReader csvReader = new CSVReader("de/exxcellent/challenge/weather.csv", ",");
 
         HashMap<String, String> entry = getSmallestDifference(
