@@ -6,15 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
 
 
-public class CSVReader {
+public class CSVReader implements Reader{
 
     private String relativeFilePath;
     private String valueSeparator;
@@ -27,8 +27,16 @@ public class CSVReader {
         this.valueSeparator = valueSeparator;
     }
 
-    public List<HashMap<String, String>> getData() throws FileNotFoundException, IllegalFormatException {
-        InputStream inputStream = getFileFromResourceAsStream(relativeFilePath);
+    public List<HashMap<String, String>> getData() throws DataNotAvailableException, IllegalFormatException {
+
+        InputStream inputStream = null;
+        try {
+            inputStream = getFileFromResourceAsStream(relativeFilePath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new DataNotAvailableException("CSV File could not be found");
+        }
+
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
         List<String> lines = bufferedReader.lines().collect(Collectors.toList());
