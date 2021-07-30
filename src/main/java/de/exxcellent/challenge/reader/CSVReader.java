@@ -1,16 +1,15 @@
 package de.exxcellent.challenge.reader;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
 
@@ -34,7 +33,7 @@ public class CSVReader extends Reader{
             inputStream = getFileFromResourceAsStream(dataPath);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            throw new DataNotAvailableException("CSV File could not be found");
+            throw new DataNotAvailableException("CSV File could not be found: " + getFileName());
         }
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -47,7 +46,7 @@ public class CSVReader extends Reader{
 
         /* Checking for incorrect format */
         if (rowLines.stream().anyMatch(row -> row.split(valueSeparator).length != columnHeadings.size()))
-            throw new IllegalFormatException("Illegal format of csv file");
+            throw new IllegalFormatException("Illegal format of csv file: " + getFileName());
 
         List<HashMap<String, String>> dataResult = new ArrayList<>();
         for (String rowLine : rowLines) {
@@ -60,6 +59,10 @@ public class CSVReader extends Reader{
             dataResult.add(mappedRow);
         }
         return dataResult;
+    }
+
+    private String getFileName(){
+        return new File(dataPath).getName();
     }
 
     private InputStream getFileFromResourceAsStream(String fileName) throws FileNotFoundException {
