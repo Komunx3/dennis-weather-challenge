@@ -2,7 +2,6 @@ package de.exxcellent.challenge.reader;
 
 import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class CSVReader extends Reader{
 
-    private String valueSeparator;
+    private final String valueSeparator;
 
     /**
      * @param filePath Absolute path if it is an external source. Relative path if it´s an internal source.
@@ -29,13 +28,20 @@ public class CSVReader extends Reader{
         try {
             inputStream = getFileFromResourceAsStream(dataPath);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             throw new DataNotAvailableException("CSV File could not be found: " + getFileName());
         }
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
         List<String> lines = bufferedReader.lines().collect(Collectors.toList());
+
+        /* Check if column headings and data entries exists*/
+        if (lines.size() == 0) {
+            throw new DataNotAvailableException("No Data available");
+        }
+        else if(lines.size() == 1) {
+            data = new ArrayList<>();
+            return;
+        }
 
         /* Collecting headers and data of csv file */
         List<String> columnHeadings = Arrays.asList(lines.get(0).split(valueSeparator));
@@ -59,24 +65,9 @@ public class CSVReader extends Reader{
     }
 
     @Override
-    public boolean dataUpdateNeeded() {
-        if (data == null) {
-            lastUpdate = System.currentTimeMillis();
-            return true;
-        }
-
-        /* Internal resources can´t be updated at runtime. -> For example: football.csv and weather.csv */
-        if (internalSource){
-            return false;
-        }
-
+    protected boolean dataUpdateNeeded() {
         File externalFile = new File(dataPath);
-        if (externalFile.lastModified() > lastUpdate) {
-            lastUpdate = System.currentTimeMillis();
-            return true;
-        } else {
-            return false;
-        }
+        return externalFile.lastModified() > lastUpdate;
     }
 
     private String getFileName(){
