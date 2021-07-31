@@ -19,15 +19,15 @@ public class CSVReader extends Reader{
     private String valueSeparator;
 
     /**
-     * @param relativeFilePath an relative path to the file (package path included)
+     * @param filePath Absolute path if it is an external source. Relative path if it´s an internal source.
      */
-    public CSVReader(String relativeFilePath, String valueSeparator) {
-        super(relativeFilePath);
+    public CSVReader(String filePath, String valueSeparator, boolean internalSource) {
+        super(filePath, internalSource);
         this.valueSeparator = valueSeparator;
     }
 
-    public List<HashMap<String, String>> getData() throws DataNotAvailableException, IllegalFormatException {
-
+    @Override
+    protected void updateData() throws IllegalFormatException, DataNotAvailableException {
         InputStream inputStream = null;
         try {
             inputStream = getFileFromResourceAsStream(dataPath);
@@ -58,7 +58,28 @@ public class CSVReader extends Reader{
             }
             dataResult.add(mappedRow);
         }
-        return dataResult;
+        data = dataResult;
+    }
+
+    @Override
+    public boolean dataUpdateNeeded() {
+        if (data == null) {
+            lastUpdate = System.currentTimeMillis();
+            return true;
+        }
+
+        /* Internal resources can´t be updated at runtime. -> For example: football.csv and weather.csv */
+        if (internalSource){
+            return false;
+        }
+
+        File externalFile = new File(dataPath);
+        if (externalFile.lastModified() > lastUpdate) {
+            lastUpdate = System.currentTimeMillis();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private String getFileName(){

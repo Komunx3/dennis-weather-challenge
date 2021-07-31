@@ -5,17 +5,22 @@ import java.util.List;
 
 import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class WebServiceReader extends Reader {
 
     public WebServiceReader(String urlToWebService) {
-        super(urlToWebService);
+        super(urlToWebService, false);
     }
 
     @Override
-    public List<HashMap<String, String>> getData() throws IllegalFormatException, DataNotAvailableException {
-       /* No Task in this challenge, but possible to build */
-       return null;
+    protected boolean dataUpdateNeeded() {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    protected void updateData() {
+        throw new NotImplementedException();
     }
 
 }
