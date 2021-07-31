@@ -3,16 +3,14 @@ package de.exxcellent.challenge.reader.data.strategies;
 import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
 import de.exxcellent.challenge.reader.Reader;
-
-import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.List;
 
 public class MinDistanceStrategy implements DataStrategy {
 
-    private String columnToDisplay;
-    private String columnToFilter1;
-    private String columnToFilter2;
+    private final String columnToDisplay;
+    private final String columnToFilter1;
+    private final String columnToFilter2;
 
     public MinDistanceStrategy(String columnToFilter1, String columnToFilter2, String columnToDisplay) {
         this.columnToFilter1 = columnToFilter1;
@@ -21,13 +19,22 @@ public class MinDistanceStrategy implements DataStrategy {
     }
 
     @Override
-    public void execute(Reader reader) {
-        List<HashMap<String, String>> data = null;
-        try {
-            data = reader.getData();
-        } catch (IllegalFormatException | DataNotAvailableException e) {
-            System.out.println(e.getMessage());
-        }
+    public String execute(Reader reader) throws IllegalFormatException, DataNotAvailableException {
+        List<HashMap<String, String>> data = reader.getData();
+
+        /* Check if data is available to calculate this strategy */
+        if (data.size() == 0)
+            return String.format("No result for minimal distance between %s and %s",
+                    columnToFilter1, columnToFilter2);
+
+        /* Check if column names exist in data */
+        long missingColumnData = data.stream().filter(n -> !n.containsKey(columnToDisplay)
+                        || !n.containsKey(columnToFilter1)
+                        || !n.containsKey(columnToFilter2)).count();
+
+        if (missingColumnData > 0)
+            return "Missing column data in reader data";
+
 
         int smallestDistance = -1;
         HashMap<String, String> smallestDistanceEntry = null;
@@ -50,16 +57,7 @@ public class MinDistanceStrategy implements DataStrategy {
             }
         }
 
-        if (smallestDistanceEntry == null) {
-            System.out.println(String.format("No result for minimal distance between %s and %s",
-                    columnToFilter1, columnToFilter2));
-        }
-        else if(smallestDistanceEntry.get(columnToDisplay) == null){
-            System.out.println("Result for minimal distance found but value to display is null");
-        }
-        else {
-            System.out.println(String.format("Result for minimal distance between %s and %s: %s",
-                    columnToFilter1, columnToFilter2, smallestDistanceEntry.get(columnToDisplay)));
-        }
+        return String.format("Result for minimal distance between %s and %s: %s",
+                columnToFilter1, columnToFilter2, smallestDistanceEntry.get(columnToDisplay));
     }
 }
