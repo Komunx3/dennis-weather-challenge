@@ -4,9 +4,6 @@ import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.HashMap;
-import java.util.List;
-
 public class JsonReader extends Reader {
 
     public JsonReader(String dataPath, boolean internalSource) {

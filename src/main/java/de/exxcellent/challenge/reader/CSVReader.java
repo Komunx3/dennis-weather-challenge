@@ -1,17 +1,14 @@
 package de.exxcellent.challenge.reader;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import de.exxcellent.challenge.exceptions.DataNotAvailableException;
+import de.exxcellent.challenge.exceptions.IllegalFormatException;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import de.exxcellent.challenge.exceptions.DataNotAvailableException;
-import de.exxcellent.challenge.exceptions.IllegalFormatException;
 
 
 public class CSVReader extends Reader{

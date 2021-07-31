@@ -1,8 +1,5 @@
 package de.exxcellent.challenge;
 
-import java.util.HashMap;
-import de.exxcellent.challenge.exceptions.DataNotAvailableException;
-import de.exxcellent.challenge.exceptions.IllegalFormatException;
 import de.exxcellent.challenge.reader.Reader;
 import de.exxcellent.challenge.reader.data.strategies.DataStrategy;
 
@@ -19,11 +16,13 @@ public class InformationCollector {
         this.dataStrategy = dataStrategy;
     }
 
-    public HashMap<String, String> getDataEntryForStrategy() throws IllegalFormatException,
-            DataNotAvailableException {
-        if (dataStrategy == null)
-            return null;
-
-        return dataStrategy.execute(reader.getData());
+    public void executeStrategy() {
+        if (dataStrategy == null) {
+            System.out.println("No strategy set");
+            return;
+        }
+        dataStrategy.execute(reader);
     }
+
+
 }

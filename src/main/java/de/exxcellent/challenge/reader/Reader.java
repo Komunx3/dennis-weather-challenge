@@ -1,9 +1,10 @@
 package de.exxcellent.challenge.reader;
 
-import java.util.HashMap;
-import java.util.List;
 import de.exxcellent.challenge.exceptions.DataNotAvailableException;
 import de.exxcellent.challenge.exceptions.IllegalFormatException;
+
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class Reader {
 

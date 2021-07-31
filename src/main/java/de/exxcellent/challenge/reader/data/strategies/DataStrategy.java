@@ -1,9 +1,11 @@
 package de.exxcellent.challenge.reader.data.strategies;
 
+import de.exxcellent.challenge.reader.Reader;
+
 import java.util.HashMap;
 import java.util.List;
 
 
 public interface DataStrategy {
-    HashMap<String, String> execute(List<HashMap<String, String>> data);
+    void execute(Reader reader);
 }
